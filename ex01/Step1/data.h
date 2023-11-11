@@ -7,16 +7,18 @@
 #include <time.h>
 // 2022 , interdit de modifier les champs existants
 
-struct VehiculeHV { 
+struct VehiculeBL { 
          int  Supprime ;
          int  Reference ;
 	 char Constructeur[30] ;
    	 char Modele[30] ;
 	 int  Quantite ;
+	 //----------------ajout------------------------
+	 int Portes; 
       
 	} ;
 
-struct FactureHV
+struct FactureBL
        {
          int NumeroFacturation ;
          char Acheteur[40] ;
