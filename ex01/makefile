@@ -7,11 +7,11 @@ udplib.o:	../udplib/udplib.h	../udplib/udplib.c
 	echo "Compilation de udplib.o"
 	gcc -c ../udplib/udplib.c	
 
-cli:	cli.c	udplib.o
+cli:	cli.c	udplib.o	lib.c
 	echo "Compilation de client"
 	gcc  -o cli  cli.c udplib.o	$(LIBS)
 
-ser:	ser.c	udplib.o
+ser:	ser.c	udplib.o	lib.c
 	echo "Compilation de serveur"
 	gcc -o ser  ser.c udplib.o	$(LIBS)
 
