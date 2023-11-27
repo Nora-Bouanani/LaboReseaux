@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "../udplib/udplib.h"
-#include "structure.h"
-
+#include "requeteBL.h"
+#include "LibSerBL.h"
 
 void die(char *s)
 {
@@ -30,7 +30,7 @@ int main(int argc,char *argv[])
  u_short PortSocket ;
  
  int tm ;
- struct Requete UneRequete ;
+ struct RequeteBL UneRequete ;
 
  memset(&sthis,0,sizeof(struct sockaddr_in)) ;
  memset(&sos,0,sizeof(struct sockaddr_in)) ; 
@@ -54,7 +54,7 @@ int main(int argc,char *argv[])
  else
     fprintf(stderr,"CreateSockets %d\n",Desc) ;
  
- tm = sizeof(struct Requete) ;
+ tm = sizeof(struct RequeteBL) ;
  rc = ReceiveDatagram( Desc,&UneRequete ,tm, &sor ) ;
  if ( rc == -1 )
     die("ReceiveDatagram") ;
@@ -64,10 +64,24 @@ int main(int argc,char *argv[])
  printf("Type recu %d\n", UneRequete.Type) ;
  /* attention l'enum peut être codé en short */
  /* reponse avec psos */
+ //------------start---
+
+ struct VehiculeBL  UnRecord ;
+
+ RechercheBL("VehiculesBL", UneRequete.Reference, &UnRecord);
+
+ strcpy(UneRequete.Constructeur, UnRecord.Constructeur);
+ strcpy(UneRequete.Modele, UnRecord.Modele);
+ UneRequete.Quantite = UnRecord.Quantite;
+ UneRequete.Portes = UnRecord.Portes;
  
- UneRequete.Type = Reponse ; 
+ 
+
+
+ //------------fin--
+ UneRequete.Type = Question; 
  strcat(UneRequete.Message," Client") ;
- rc = SendDatagram(Desc,&UneRequete,sizeof(struct Requete) ,&sor ) ;
+ rc = SendDatagram(Desc,&UneRequete,sizeof(struct RequeteBL) ,&sor ) ;
  if ( rc == -1 )
     die("SendDatagram:") ;
  else

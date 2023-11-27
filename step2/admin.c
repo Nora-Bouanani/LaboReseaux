@@ -1,6 +1,6 @@
 /******************************************
   Herman Vanstapel
-  2017 Basé sur Fichiers
+  2017 Basé sur Fichiers 
 *******************************************/
 
 #include <stdio.h>
@@ -235,7 +235,7 @@ void ListingVehiculesBL (char *NomFichier)
  
  while ( !feof(sortie) )
  {
-  fprintf(stderr,"Record lu %d et Position actuelle dans le fichier %ld\n",nbr,ftell(sortie)) ;
+  //fprintf(stderr,"Record lu %d et Position actuelle dans le fichier %ld\n",nbr,ftell(sortie)) ;
   AfficheVehiculeBL ( &UnRecord) ;
   nbr = fread(&UnRecord,sizeof(UnRecord),1,sortie) ;
  }
@@ -264,7 +264,7 @@ void ListingFacturesBL(char *NomFichier)
  
  while ( !feof(sortie) )
  {
-  fprintf(stderr,"Record lu %d et Position actuelle dans le fichier %ld\n",nbr,ftell(sortie)) ;
+  //fprintf(stderr,"Record lu %d et Position actuelle dans le fichier %ld\n",nbr,ftell(sortie)) ;
   AfficheFacture( &UneFacture) ;
   nbr = fread(&UneFacture,sizeof(struct FactureBL ),1,sortie) ;
  }
@@ -317,7 +317,11 @@ int main()
    case '4':printf("Saisie Reference :") ;
             fgets(Tampon,sizeof Tampon,stdin ) ;
             reference = atoi(Tampon) ;
-            RechercheBL("VehiculesBL",reference,&UnRecord) ; 
+            if((RechercheBL("VehiculesBL",reference,&UnRecord))==1) 
+            { 
+               AfficheEnteteVehiculeBL();
+               AfficheVehiculeBL(&UnRecord);
+            }
              break ;
 
    case '6': ListingFacturesBL("FactureBL") ;

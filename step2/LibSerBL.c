@@ -26,8 +26,7 @@ int RechercheBL(char* NomFichier,int Reference ,struct VehiculeBL *UnRecord) //a
     {
         if (UnRecord->Reference == Reference) 
         {
-            AfficheEnteteVehiculeBL();
-            AfficheVehiculeBL(UnRecord);
+            
             fclose(fichier);
             return 1; 
         }

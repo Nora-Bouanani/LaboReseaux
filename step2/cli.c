@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "../udplib/udplib.h"
-// #include "structure.h"
 #include "requeteBL.h"
 
 void die(char *s)
@@ -29,7 +28,7 @@ int main(int argc, char *argv[])
  struct sockaddr_in sthis ; /* this ce programme */
  struct sockaddr_in sos ; /* s = serveur */
  struct sockaddr_in sor ; /* r = remote */
- struct Requete UneRequete ;
+ struct RequeteBL UneRequete ;
 
  memset(&sthis,0,sizeof(struct sockaddr_in)) ;
  memset(&sos,0,sizeof(struct sockaddr_in)) ; 
@@ -61,25 +60,36 @@ int main(int argc, char *argv[])
   sos.sin_addr.s_addr= IpServer ;
   sos.sin_port = htons(PortServer) ;
 
- 
+ //-------start------
+   char Tampon[80] ;
+
+   printf("Saisie Reference :") ;
+   fgets(Tampon,sizeof Tampon,stdin ) ;
+
+   UneRequete.Reference = atoi(Tampon) ;
+   
+   //_-----fin-----
  UneRequete.Type = Question ; 
  strncpy(UneRequete.Message , "Avec une structure: Bonjour" , sizeof(UneRequete.Message)) ;
  
- rc = SendDatagram(Desc,&UneRequete,sizeof(struct Requete) ,&sos ) ;
+ rc = SendDatagram(Desc,&UneRequete,sizeof(struct RequeteBL) ,&sos ) ;
 
  if ( rc == -1 )
     die("SendDatagram") ;
  else
    fprintf(stderr,"Envoi de %d bytes\n",rc ) ;
  
- memset(&UneRequete,0,sizeof(struct Requete)) ;
- tm = sizeof(struct Requete) ;
+ memset(&UneRequete,0,sizeof(struct RequeteBL)) ;
+ tm = sizeof(struct RequeteBL) ;
  
   rc = ReceiveDatagram( Desc, &UneRequete,tm, &sor ) ;
  if ( rc == -1 )
     die("ReceiveDatagram") ;
  else
+ {
    fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+  
+ }
  
  close(Desc) ;
 }

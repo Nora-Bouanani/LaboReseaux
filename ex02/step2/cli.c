@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../udplib/udplib.h"
-#include "structure.h"
+#include "requeteBL.h"
 
 void die(char *s)
 {
@@ -60,7 +60,14 @@ int main(int argc, char *argv[])
   sos.sin_addr.s_addr= IpServer ;
   sos.sin_port = htons(PortServer) ;
 
- 
+ //-------------
+   char Tampon[80] ;
+
+   printf("Saisie Reference :") ;
+   fgets(Tampon,sizeof Tampon,stdin ) ;
+
+   UneRequete.Reference = atoi(Tampon) ;
+   //_----------
  UneRequete.Type = Question ; 
  strncpy(UneRequete.Message , "Avec une structure: Bonjour" , sizeof(UneRequete.Message)) ;
  
@@ -78,7 +85,15 @@ int main(int argc, char *argv[])
  if ( rc == -1 )
     die("ReceiveDatagram") ;
  else
-   fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+ {
+   //fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+   fprintf(stderr,"Reference: %d\n", UneRequete.Reference);
+    fprintf(stderr,"Constructeur: %s\n", UneRequete.Constructeur);
+    fprintf(stderr,"Modele: %s\n", UneRequete.Modele);
+    fprintf(stderr,"Puissance: %d\n", UneRequete.Puissance);
+    fprintf(stderr,"Quantite: %d\n", UneRequete.Quantite);
+    fprintf(stderr,"Portes: %d\n", UneRequete.Portes);
+ }
  
  close(Desc) ;
 }
