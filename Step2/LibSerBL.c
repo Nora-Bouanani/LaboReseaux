@@ -15,7 +15,7 @@ int RechercheBL(char* NomFichier,int Reference ,struct VehiculeBL *UnRecord) //a
     fichier = fopen(NomFichier, "r");
     if (fichier == NULL) 
     {
-        fprintf(stderr,"Echec Ouverture\n") ;
+        fprintf(stderr,"Echec Ouverture1\n") ;
         exit(0) ;
     }
     else

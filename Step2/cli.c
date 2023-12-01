@@ -8,7 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "../udplib/udplib.h"
-#include "requeteBL.h"
+//#include "structure.h"
+#include "RequeteBL.h"
+
 
 void die(char *s)
 {
@@ -60,19 +62,19 @@ int main(int argc, char *argv[])
   sos.sin_addr.s_addr= IpServer ;
   sos.sin_port = htons(PortServer) ;
 
- //-------start------
-   char Tampon[80] ;
 
-   printf("Saisie Reference :") ;
-   fgets(Tampon,sizeof Tampon,stdin ) ;
-
-   UneRequete.Reference = atoi(Tampon) ;
+//-
+   char Tampon[80];
+   printf("Entrez une reference :\n");
+   fgets(Tampon, sizeof(Tampon), stdin);
+   UneRequete.Reference= atoi(Tampon);
    
-   //_-----fin-----
+//-
+
  UneRequete.Type = Question ; 
  strncpy(UneRequete.Message , "Avec une structure: Bonjour" , sizeof(UneRequete.Message)) ;
- 
  rc = SendDatagram(Desc,&UneRequete,sizeof(struct RequeteBL) ,&sos ) ;
+
 
  if ( rc == -1 )
     die("SendDatagram") ;
@@ -86,10 +88,21 @@ int main(int argc, char *argv[])
  if ( rc == -1 )
     die("ReceiveDatagram") ;
  else
- {
-   fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
-  
- }
+   {
+      fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+         fprintf(stdout, "Reference : %d, Constructeur : %s, Modele : %s, Portes : %d, Quantite : %d\n",
+            UneRequete.Reference, UneRequete.Constructeur, UneRequete.Modele, UneRequete.Portes, UneRequete.Quantite);
+      // if (UneRequete.Type == OK)
+      // {
+      //    //AfficheRequeteBL(stderr, UneRequete);
+      //     fprintf(stdout, "Reference : %d, Constructeur : %s, Modele : %s, Portes : %d, Quantite : %d\n",
+      //       UneRequete.Reference, UneRequete.Constructeur, UneRequete.Modele, UneRequete.Portes, UneRequete.Quantite);
+      // }else
+      // {
+      // fprintf(stderr, "Aucun vehicule trouve |\n");
+      // }
+      //-
+   }
  
  close(Desc) ;
 }

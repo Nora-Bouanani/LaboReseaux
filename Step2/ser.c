@@ -9,7 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "../udplib/udplib.h"
-#include "requeteBL.h"
+// #include "structure.h"
+#include "RequeteBL.h"
+#include "data.h"
 #include "LibSerBL.h"
 
 void die(char *s)
@@ -56,31 +58,45 @@ int main(int argc,char *argv[])
  
  tm = sizeof(struct RequeteBL) ;
  rc = ReceiveDatagram( Desc,&UneRequete ,tm, &sor ) ;
- if ( rc == -1 )
-    die("ReceiveDatagram") ;
- else
-   fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+
+
+  if ( rc == -1 ) 
+    die("ReceiveDatagram");
+
+
+ // else
+ //   fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
  
  printf("Type recu %d\n", UneRequete.Type) ;
  /* attention l'enum peut être codé en short */
  /* reponse avec psos */
- //------------start---
-
- struct VehiculeBL  UnRecord ;
-
- RechercheBL("VehiculesBL", UneRequete.Reference, &UnRecord);
-
- strcpy(UneRequete.Constructeur, UnRecord.Constructeur);
- strcpy(UneRequete.Modele, UnRecord.Modele);
- UneRequete.Quantite = UnRecord.Quantite;
- UneRequete.Portes = UnRecord.Portes;
- 
- 
-
-
- //------------fin--
- UneRequete.Type = Question; 
+ //-------
+ UneRequete.Type = OK; 
  strcat(UneRequete.Message," Client") ;
+
+ struct VehiculeBL Vehicule;
+ UneRequete.Numero =0;
+ UneRequete.NumeroFacture=0;
+ UneRequete.Date=0;
+ UneRequete.Prix=0;
+ strcpy(UneRequete.NomClient,"0");
+
+
+   if(RechercheBL("VehiculesBL",UneRequete.Reference,&Vehicule))
+   {
+      UneRequete.Type=OK;
+      strcpy(UneRequete.Modele, Vehicule.Modele);
+      UneRequete.Quantite = Vehicule.Quantite;
+      strcpy(UneRequete.Constructeur, Vehicule.Constructeur);
+      UneRequete.Reference = Vehicule.Reference;
+      UneRequete.Portes = Vehicule.Portes;
+      AfficheRequeteBL(stderr, UneRequete);
+   }
+   else
+   {
+      UneRequete.Type = Fail;//5
+   }
+//-------
  rc = SendDatagram(Desc,&UneRequete,sizeof(struct RequeteBL) ,&sor ) ;
  if ( rc == -1 )
     die("SendDatagram:") ;
