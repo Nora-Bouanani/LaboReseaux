@@ -2,14 +2,14 @@
 # cphex\makefile
 
 LIBS=
-all:	admin	LibSerBL.o
+all:	admin	LibSerHV.o
 
 
-LibSerBL.o:	LibSerBL.c	LibSerBL.h	data.h	
-	echo "compilation de LibSerBL"
-	gcc -c LibSerBL.c
+LibSerHV.o:	LibSerHV.c	LibSerHV.h	data.h	
+	echo "compilation de LibSerHV"
+	gcc -c LibSerHV.c
 
-admin:	data.h	admin.c	LibSerBL.o			
+admin:	data.h	admin.c	LibSerHV.o			
 	echo "Compilation de admin"
-	gcc -o admin	admin.c	LibSerBL.o 
+	gcc -o admin	admin.c	LibSerHV.o 
 

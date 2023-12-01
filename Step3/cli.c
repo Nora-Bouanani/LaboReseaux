@@ -8,7 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "../udplib/udplib.h"
-#include "requeteBL.h"
+//#include "structure.h"
+#include "RequeteBL.h"
+
 
 void die(char *s)
 {
@@ -28,7 +30,7 @@ int main(int argc, char *argv[])
  struct sockaddr_in sthis ; /* this ce programme */
  struct sockaddr_in sos ; /* s = serveur */
  struct sockaddr_in sor ; /* r = remote */
- struct Requete UneRequete ;
+ struct RequeteBL UneRequete ;
 
  memset(&sthis,0,sizeof(struct sockaddr_in)) ;
  memset(&sos,0,sizeof(struct sockaddr_in)) ; 
@@ -60,40 +62,47 @@ int main(int argc, char *argv[])
   sos.sin_addr.s_addr= IpServer ;
   sos.sin_port = htons(PortServer) ;
 
- //-------------
-   char Tampon[80] ;
 
-   printf("Saisie Reference :") ;
-   fgets(Tampon,sizeof Tampon,stdin ) ;
+//-
+   char Tampon[80];
+   printf("Entrez une reference :\n");
+   fgets(Tampon, sizeof(Tampon), stdin);
+   UneRequete.Reference= atoi(Tampon);
+   
+//-
 
-   UneRequete.Reference = atoi(Tampon) ;
-   //_----------
  UneRequete.Type = Question ; 
  strncpy(UneRequete.Message , "Avec une structure: Bonjour" , sizeof(UneRequete.Message)) ;
- 
- rc = SendDatagram(Desc,&UneRequete,sizeof(struct Requete) ,&sos ) ;
+ rc = SendDatagram(Desc,&UneRequete,sizeof(struct RequeteBL) ,&sos ) ;
+
 
  if ( rc == -1 )
     die("SendDatagram") ;
  else
    fprintf(stderr,"Envoi de %d bytes\n",rc ) ;
  
- memset(&UneRequete,0,sizeof(struct Requete)) ;
- tm = sizeof(struct Requete) ;
+ memset(&UneRequete,0,sizeof(struct RequeteBL)) ;
+ tm = sizeof(struct RequeteBL) ;
  
   rc = ReceiveDatagram( Desc, &UneRequete,tm, &sor ) ;
  if ( rc == -1 )
     die("ReceiveDatagram") ;
  else
- {
-   //fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
-   fprintf(stderr,"Reference: %d\n", UneRequete.Reference);
-    fprintf(stderr,"Constructeur: %s\n", UneRequete.Constructeur);
-    fprintf(stderr,"Modele: %s\n", UneRequete.Modele);
-    fprintf(stderr,"Puissance: %d\n", UneRequete.Puissance);
-    fprintf(stderr,"Quantite: %d\n", UneRequete.Quantite);
-    fprintf(stderr,"Portes: %d\n", UneRequete.Portes);
- }
+   {
+      fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+         fprintf(stdout, "Reference : %d, Constructeur : %s, Modele : %s, Portes : %d, Quantite : %d\n",
+            UneRequete.Reference, UneRequete.Constructeur, UneRequete.Modele, UneRequete.Portes, UneRequete.Quantite);
+      // if (UneRequete.Type == OK)
+      // {
+      //    //AfficheRequeteBL(stderr, UneRequete);
+      //     fprintf(stdout, "Reference : %d, Constructeur : %s, Modele : %s, Portes : %d, Quantite : %d\n",
+      //       UneRequete.Reference, UneRequete.Constructeur, UneRequete.Modele, UneRequete.Portes, UneRequete.Quantite);
+      // }else
+      // {
+      // fprintf(stderr, "Aucun vehicule trouve |\n");
+      // }
+      //-
+   }
  
  close(Desc) ;
 }

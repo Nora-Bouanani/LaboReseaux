@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "../udplib/udplib.h"
-#include "requeteBL.h"
-#include "LibSerBL.h"
+#include "structure.h"
+
 
 void die(char *s)
 {
@@ -64,19 +64,7 @@ int main(int argc,char *argv[])
  printf("Type recu %d\n", UneRequete.Type) ;
  /* attention l'enum peut être codé en short */
  /* reponse avec psos */
- struct VehiculeBL  UnRecord ;
-
- RechercheKM("VehiculesBL", UneRequete.Reference, &UnRecord);
-
- strcpy(UneRequete.Constructeur, UnRecord.Constructeur);
- strcpy(UneRequete.Modele, UnRecord.Modele);
- UneRequete.Puissance = UnRecord.Puissance;
- UneRequete.Quantite = UnRecord.Quantite;
  
- UneRequete.Type = Reponse ; 
-
-
- //---------------
  UneRequete.Type = Reponse ; 
  strcat(UneRequete.Message," Client") ;
  rc = SendDatagram(Desc,&UneRequete,sizeof(struct Requete) ,&sor ) ;
